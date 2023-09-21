@@ -1,7 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, Context
-from .serializers import WorkflowDefinitionSerializer, TaskDefinitionSerializer, WorkflowInstanceSerializer, ContextSerializer
+from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, Context, TaskInstance
+from .serializers import WorkflowDefinitionSerializer, TaskDefinitionSerializer, WorkflowInstanceSerializer, \
+    ContextSerializer, TaskInstanceSerializer
+
 
 class WorkflowDefinitionViewSet(viewsets.ModelViewSet):
     queryset = WorkflowDefinition.objects.all()
@@ -35,3 +37,7 @@ class WorkflowInstanceViewSet(viewsets.ModelViewSet):
 class ContextViewSet(viewsets.ModelViewSet):
     queryset = Context.objects.all()
     serializer_class = ContextSerializer
+
+class TaskInstanceViewSet(viewsets.ModelViewSet):
+    queryset = TaskInstance.objects.all()
+    serializer_class = TaskInstanceSerializer
