@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, TaskInstance
+from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, Context
 
 class WorkflowDefinitionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,12 +11,14 @@ class TaskDefinitionSerializer(serializers.ModelSerializer):
         model = TaskDefinition
         fields = '__all__'
 
-class WorkflowInstanceSerializer(serializers.ModelSerializer):
+class ContextSerializer(serializers.ModelSerializer):
     class Meta:
-        model = WorkflowInstance
+        model = Context
         fields = '__all__'
 
-class TaskInstanceSerializer(serializers.ModelSerializer):
+class WorkflowInstanceSerializer(serializers.ModelSerializer):
+    context = ContextSerializer(read_only=True)
+
     class Meta:
-        model = TaskInstance
+        model = WorkflowInstance
         fields = '__all__'
