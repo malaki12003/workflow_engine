@@ -41,3 +41,16 @@ class ContextViewSet(viewsets.ModelViewSet):
 class TaskInstanceViewSet(viewsets.ModelViewSet):
     queryset = TaskInstance.objects.all()
     serializer_class = TaskInstanceSerializer
+    def perform_update(self, serializer):
+        instance = self.get_object()
+
+        # Update the TaskInstance object
+        serializer.save()
+
+        # Get the associated WorkflowInstance
+        workflow_instance = instance.workflow_instance
+
+        # Execute the workflow
+        workflow_instance.execute_workflow()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

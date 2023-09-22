@@ -8,6 +8,7 @@ class WorkflowDefinitionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TaskDefinitionSerializer(serializers.ModelSerializer):
+    dependencies = serializers.StringRelatedField(many=True)
     class Meta:
         model = TaskDefinition
         fields = '__all__'
