@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, Context, TaskInstance
+from .models import WorkflowDefinition, TaskDefinition, WorkflowInstance, Context, TaskInstance, TaskOperation
 
 
 class WorkflowDefinitionSerializer(serializers.ModelSerializer):
@@ -9,6 +9,7 @@ class WorkflowDefinitionSerializer(serializers.ModelSerializer):
 
 class TaskDefinitionSerializer(serializers.ModelSerializer):
     dependencies = serializers.StringRelatedField(many=True)
+    operation = serializers.ChoiceField(choices=TaskOperation.choices)
     class Meta:
         model = TaskDefinition
         fields = '__all__'

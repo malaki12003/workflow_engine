@@ -6,6 +6,9 @@ class WorkflowDefinition(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
 
+class TaskOperation(models.TextChoices):
+    AND = 'AND', 'AND'
+    OR = 'OR', 'OR'
 
 class TaskDefinition(models.Model):
     workflow = models.ForeignKey(WorkflowDefinition, related_name='tasks', on_delete=models.CASCADE)
@@ -13,7 +16,11 @@ class TaskDefinition(models.Model):
     action = models.CharField(max_length=255)
     url = models.URLField(null=True, blank=True)
     dependencies = models.ManyToManyField('self', symmetrical=False, blank=True)
-
+    operation = models.CharField(
+        max_length=3,
+        choices=TaskOperation.choices,
+        default=TaskOperation.AND,
+    )
 
 class Context(models.Model):
     data = models.JSONField()
@@ -96,12 +103,28 @@ class TaskInstance(models.Model):
 
     def are_dependencies_met(self):
         dependencies = self.task_definition.dependencies.all()
-        for dependency in dependencies:
-            try:
-                instance = TaskInstance.objects.get(task_definition=dependency,
-                                                    workflow_instance=self.workflow_instance)
-                if instance.state != 'success':
+
+        if not dependencies:
+            return True
+
+        if self.task_definition.operation == TaskOperation.AND:
+            for dependency in dependencies:
+                try:
+                    instance = TaskInstance.objects.get(task_definition=dependency,
+                                                        workflow_instance=self.workflow_instance)
+                    if instance.state != 'success':
+                        return False
+                except TaskInstance.DoesNotExist:
                     return False
-            except TaskInstance.DoesNotExist:
-                return False
-        return True
+            return True
+
+        elif self.task_definition.operation == TaskOperation.OR:
+            for dependency in dependencies:
+                try:
+                    instance = TaskInstance.objects.get(task_definition=dependency,
+                                                        workflow_instance=self.workflow_instance)
+                    if instance.state == 'success':
+                        return True
+                except TaskInstance.DoesNotExist:
+                    pass
+            return False

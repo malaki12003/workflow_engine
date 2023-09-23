@@ -1,0 +1,21 @@
+{
+  "workflow_id": "AAA",
+  "name": "test",
+  "description": "",
+  "tasks": [
+    {
+      "name": "retool2",
+      "url": "https://api-generator.retool.com/afmnJw/data",
+      "action": "Get",
+      "dependencies": []
+    },
+    {
+      "name": "retool3",
+      "url": "https://api-generator.retool.com/afmnJw/data",
+      "action": "Get",
+      "dependencies": []
+    }
+  ]
+}
+
+

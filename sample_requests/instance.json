@@ -1,0 +1,12 @@
+{
+  "params": {
+    "headers": {
+      "Authorization": "Bearer some_token"
+    },
+    "query_params": {
+      "param1": "value1",
+      "param2": "value2"
+    }
+  },
+  "workflow_id": 2
+}
